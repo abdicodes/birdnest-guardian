@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -13,6 +13,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import dateConverter from './assets/dateConverter';
+import { distanceCal } from './assets/distanceCal';
+import { useSelector } from 'react-redux';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,68 +28,85 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const Cards = ({ card }) => {
+const Cards = ({ pilot }) => {
   const [expanded, setExpanded] = useState(false);
-  console.log(card);
+
+  const drones = useSelector((state) => state.reducer.drones);
+  const drone = drones.find((e) => e.serialNumber === pilot.serialNumber);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  if (!pilot) {
+    return null;
+  }
 
-  return (
-    <div style={{ margin: '25%' }}>
-      <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              card.firstName.charAt(0) card.lastName.charAt(0)
-            </Avatar>
-          }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={`${card.firstName} ${card.lastName}`}
-          subheader={card.email}
-        />
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            Violation detected at
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+  // drones.forEach((e) => {
+  //   console.log(e.serialNumber, ' ', card.pilotId);
+  // });
+
+  if (drone)
+    return (
+      <div
+        style={{
+          margin: '20px',
+          justifyContent: 'space-evenly',
+          display: 'flex',
+          flex: '1',
+          alignContent: 'space-evenly',
+        }}
+      >
+        <Card elevation={5} sx={{ maxWidth: 345 }}>
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                {pilot.firstName.charAt(0)} {pilot.lastName.charAt(0)}
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={`${pilot.firstName} ${pilot.lastName}`}
+            subheader={pilot.email}
+          />
           <CardContent>
-            <Typography paragraph>Chevrolet Description</Typography>
-            <Typography paragraph>
-              Chevrolet is an iconic American automobile brand founded in 1911
-              by Louis Chevrolet and William C. Durant
-            </Typography>
-            <Typography paragraph>
-              It is currently the fourth-largest automotive brand in the United
-              States and is a division of General Motors. Chevrolet has become
-              one of America’s most iconic brands, producing reliable and
-              stylish cars, trucks, and SUVs for over a century. Its models
-              range from the economical Spark to the luxurious Corvette.
-            </Typography>
-            <Typography paragraph>
-              Chevrolet is also known for its commitment to safety, providing
-              advanced features like lane departure warning and front crash
-              prevention. (Discard any mussels that don&apos;t open.)
+            <Typography variant="body2" color="text.secondary">
+              Violation detected at {dateConverter(pilot.time)} <br />
+              {/* at {droneDistance} meters away from nest. */}
             </Typography>
           </CardContent>
-        </Collapse>
-      </Card>
-    </div>
-  );
+          <CardActions disableSpacing>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          </CardActions>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography paragraph>
+                Drone altitude: {Math.round(drone.altitude)} foot
+              </Typography>
+              <Typography paragraph>
+                Pilot phone number: {pilot.phoneNumber}
+              </Typography>
+              <Typography paragraph>
+                Drone license valid from: {dateConverter(pilot.createdDt)}
+              </Typography>
+              {/* <Typography paragraph>
+                Chevrolet is also known for its commitment to safety, providing
+                advanced features like lane departure warning and front crash
+                prevention. (Discard any mussels that don&apos;t open.)
+              </Typography> */}
+            </CardContent>
+          </Collapse>
+        </Card>
+      </div>
+    );
 };
 export default Cards;
