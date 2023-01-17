@@ -38,7 +38,7 @@ const Cards = ({ pilot }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  if (!pilot) {
+  if (!pilot | !drone) {
     return null;
   }
 
@@ -67,7 +67,12 @@ const Cards = ({ pilot }) => {
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               Violation detected at {dateConverter(pilot.time)} <br />
-              {/* at {droneDistance} meters away from nest. */}
+              at{' '}
+              {Math.round(
+                distanceCal(drone.positionX, drone.positionY, 250000, 250000) /
+                  1000
+              )}{' '}
+              meters away from nest.
             </Typography>
           </CardContent>
           <CardActions disableSpacing>

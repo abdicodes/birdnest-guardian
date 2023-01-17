@@ -31,10 +31,8 @@ function App() {
       <Grid container spacing={0} sx={{ padding: '100px' }}>
         <Typography variant="h4">
           {' '}
-          Closet confirmed distance is: {Math.round(
-            closestDist.distance / 100
-          )}{' '}
-          meters
+          Closest confirmed distance is:{' '}
+          {Math.round(closestDist.distance / 1000)} meters
         </Typography>
       </Grid>
       <Grid
