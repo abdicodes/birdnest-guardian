@@ -15,6 +15,7 @@ const tenMinutes = 600000;
 //min distance recorded violation starts with 500000 and gets updated in each request
 let minRecordedDistance = { distance: 500000, drone: null };
 let violations = [];
+let pilots = [];
 
 // request(
 //   'https://assignments.reaktor.com/birdnest/drones',
@@ -69,6 +70,7 @@ const job1 = schedule.scheduleJob('*/2 * * * * *', () => {
 
           if (!exists) {
             violations.push({ ...element, time: Date.now() });
+            pilotRequest(element.serialNumber);
           }
 
           console.log('violation detected');
@@ -80,10 +82,14 @@ const job1 = schedule.scheduleJob('*/2 * * * * *', () => {
 
 const job2 = schedule.scheduleJob('*/5 * * * * *', () => {
   // console.log(violations);
-  const violation = violations.filter(
+  violations = violations.filter(
     (element) => Date.now() - element.time < tenMinutes
   );
-  console.log(violation);
+  // pilots = pilots.filter((pilot) =>
+  //   violations.map((e) => e.serialNumber).includes(pilot.pilotId)
+  // );
+
+  // console.log(violation);
 });
 
 // calculate distance between two points
@@ -92,6 +98,19 @@ const distanceCalculator = (x1, y1, x2, y2) => {
   yDifferenceSquare = Math.pow(y2 - y1, 2);
 
   return Math.sqrt(xDifferenceSquare + yDifferenceSquare);
+};
+
+const pilotRequest = (serialNumber) => {
+  request(
+    `https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`,
+    { json: true },
+    (error, response, body) => {
+      console.error('error:', error); // Print the error if one occurred
+      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+      pilots = [...pilots, { ...body, time: Date.now() }];
+      console.log(pilots);
+    }
+  );
 };
 
 app.use(cors());
