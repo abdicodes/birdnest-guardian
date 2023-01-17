@@ -18,7 +18,6 @@ function App() {
   const drones = useSelector((state) => state.reducer.drones);
   const closestDist = useSelector((state) => state.reducer.minRecordedDistance);
   const radarToggle = (e) => {
-    console.log(e.target.innerText);
     if (e.target.innerText === 'DISPLAY RADAR') {
       e.target.innerText = 'HIDE RADAR';
     } else {
