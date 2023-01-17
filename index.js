@@ -62,6 +62,7 @@ const job1 = schedule.scheduleJob('*/2 * * * * *', () => {
 
 const job2 = schedule.scheduleJob('*/2 * * * * *', () => {
   drones = drones.filter((element) => Date.now() - element.time < tenMinutes);
+  pilots = pilots.filter((element) => Date.now() - element.time < tenMinutes);
 });
 
 // calculate distance between two points

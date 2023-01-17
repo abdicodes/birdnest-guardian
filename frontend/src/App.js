@@ -1,39 +1,47 @@
 import { useState, useEffect } from 'react';
 import Cards from './Cards';
-import axios from 'axios';
 import schedule from 'node-schedule';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchApi } from './reducers/apiReducer';
+import Radar from './Radar';
 function App() {
-  // const [pilotList, setPilotList] = useState([]);
-  // const [drones, setDrones] = useState([]);
+  const [showRadar, setShowRadar] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     schedule.scheduleJob('*/2 * * * * *', () => {
-      //   axios.get('http://localhost:3001').then((response) => {
-      //     setPilotList(response.data.pilots);
-      //     setDrones(response.data.drones);
-      //     // console.log([...response.data]);
-      //   });
       dispatch(fetchApi());
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const pilots = useSelector((state) => state.reducer.pilots);
+  const drones = useSelector((state) => state.reducer.drones);
   const closestDist = useSelector((state) => state.reducer.minRecordedDistance);
-
-  // console.log(pilotList[0].firstName);
-
-  // if (pilotList.length > 0)
+  const radarToggle = (e) => {
+    console.log(e.target.innerText);
+    if (e.target.innerText === 'DISPLAY RADAR') {
+      e.target.innerText = 'HIDE RADAR';
+    } else {
+      e.target.innerText = 'DISPLAY RADAR';
+    }
+    setShowRadar(!showRadar);
+  };
   if (!pilots) return null;
   return (
     <Box sx={{ flexGrow: 1 }} style={{ background: 'Azure' }}>
-      <Grid container spacing={0} sx={{ padding: '100px' }}>
+      <Grid container spacing={0} sx={{ padding: '20px' }}>
         <Typography variant="h4">
           {' '}
           Closest confirmed distance is:{' '}
           {Math.round(closestDist.distance / 1000)} meters
         </Typography>
+        {showRadar && <Radar drones={drones} />}
+      </Grid>
+      <Grid container spacing={0} sx={{ padding: '30px' }}>
+        {' '}
+        <Button variant="contained" onClick={radarToggle}>
+          Display radar
+        </Button>
       </Grid>
       <Grid
         container
@@ -41,10 +49,7 @@ function App() {
         style={{ background: 'LightBlue', padding: '50px' }}
       >
         {pilots.map((pilot) => (
-          // <Grid item xs={4} key={pilot.pilotId}>
-
           <Cards key={pilot.pilotId} pilot={pilot} />
-          // </Grid>
         ))}
       </Grid>
     </Box>
