@@ -60,7 +60,7 @@ const job1 = schedule.scheduleJob('*/2 * * * * *', () => {
   );
 });
 
-const job2 = schedule.scheduleJob('*/5 * * * * *', () => {
+const job2 = schedule.scheduleJob('*/2 * * * * *', () => {
   drones = drones.filter((element) => Date.now() - element.time < tenMinutes);
 });
 

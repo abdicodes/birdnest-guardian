@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
+import { Grid } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -47,15 +48,7 @@ const Cards = ({ pilot }) => {
 
   if (drone)
     return (
-      <div
-        style={{
-          margin: '20px',
-          justifyContent: 'space-evenly',
-          display: 'flex',
-          flex: '1',
-          alignContent: 'space-evenly',
-        }}
-      >
+      <Grid item xs={4}>
         <Card elevation={5} sx={{ maxWidth: 345 }}>
           <CardHeader
             avatar={
@@ -106,7 +99,7 @@ const Cards = ({ pilot }) => {
             </CardContent>
           </Collapse>
         </Card>
-      </div>
+      </Grid>
     );
 };
 export default Cards;
