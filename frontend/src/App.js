@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import Cards from './Cards';
+import axios from 'axios';
+import schedule from 'node-schedule';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [pilotList, setPilotList] = useState([]);
+  useEffect(() => {
+    schedule.scheduleJob('*/5 * * * * *', () => {
+      axios.get('http://localhost:3001').then((response) => {
+        setPilotList(response.data);
+        // console.log([...response.data]);
+      });
+    });
+  }, []);
+  // console.log(pilotList[0].firstName);
+
+  if (pilotList.length > 0)
+    return (
+      <div className="App">
+        <Cards card={pilotList[0]} />
+      </div>
+    );
 }
 
 export default App;

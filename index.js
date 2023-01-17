@@ -116,7 +116,9 @@ const pilotRequest = (serialNumber) => {
 app.use(cors());
 app.use(express.json());
 
-app.get('/info', (req, res) => {});
+app.get('/', (req, res) => {
+  res.send(pilots);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
