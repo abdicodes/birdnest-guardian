@@ -4,6 +4,7 @@ const cors = require('cors');
 const schedule = require('node-schedule');
 const request = require('request');
 const { XMLParser } = require('fast-xml-parser');
+app.use(express.static('build'));
 
 //coordinations of the birdnest
 const birdX = 250000;
@@ -50,10 +51,6 @@ const job1 = schedule.scheduleJob('*/2 * * * * *', () => {
             drones.push({ ...element, time: Date.now() });
             pilotRequest(element.serialNumber);
           }
-
-          console.log('violation detected');
-          console.log(pilots);
-          console.log(drones);
         }
       });
     }
@@ -91,7 +88,7 @@ const pilotRequest = (serialNumber) => {
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/data', (req, res) => {
   res.send({
     pilots: pilots,
     drones: drones,
