@@ -29,11 +29,13 @@ function App() {
   return (
     <Box sx={{ flexGrow: 1 }} style={{ background: 'Azure' }}>
       <Grid container spacing={0} sx={{ padding: '20px' }}>
-        <Typography variant="h4">
-          {' '}
-          Closest confirmed distance is:{' '}
-          {Math.round(closestDist.distance / 1000)} meters
-        </Typography>
+        {closestDist.distance && (
+          <Typography variant="h4">
+            {' '}
+            Closest confirmed distance is:{' '}
+            {Math.round(closestDist.distance / 1000)} meters
+          </Typography>
+        )}
         {showRadar && <Radar drones={drones} />}
       </Grid>
       <Grid container spacing={0} sx={{ padding: '30px' }}>
